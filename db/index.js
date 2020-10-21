@@ -5,69 +5,42 @@ class DB{
         this.connection = connection;
     }
 
-    viewAllEmployess(){
+    findAllEmployees(){
         return this.connection.query(
-            "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;"
+            "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;"
         );
-    }
+    };
 
-    viewAllRoles(){
+    findAllRoles(){
         return this.connection.query(
-            "SELECT employee.id, employee.first_name, employee.last_name, role.salary, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;"
+            "SELECT * FROM role ;"
         );
-    }
+    };
 
-    viewAllDepartments(){
+    findAllDepartments(){
         return this.connection.query(
-            "SELECT employee.first_name, employee.last_name, role.salary, department.name AS department FROM employee JOIN role on employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id;"
+            "SELECT department.name, department.id, employee.first_name, employee.last_name, role.salary, department.name AS department FROM employee JOIN role on employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id;"
         );
-    }
+    };
+    
+    addDepartment(department){
+        return this.connection.query("INSERT INTO department SET ? ", department); 
+    };
 
-    updateDepartment(){
-        return this.connection.query("UPDATE songs SET title='somehthing' WHERE artist=?",["da baby"], function(err, res){
-            if(err) throw err;
-        })
-    }
+    addRole(role){
+        return this.connection.query("INSERT INTO role SET ? ", role);
+    };
 
-    updateRoles(){
-        return this.connection.query("UPDATE songs SET title='somehthing' WHERE artist=?",["da baby"], function(err, res){
-            if(err) throw err;
-        })
-    }
+    addEmployee(employeeNew){
+        return this.connection.query("INSERT INTO employee SET ?", employeeNew);
+    };
 
-    updateEmployees(){
-        return this.connection.query("UPDATE songs SET title='somehthing' WHERE artist=?",["da baby"], function(err, res){
-            if(err) throw err;
-        })
-    }
+    updateEmployeeRole(employeeId, roleId){
+        
+        return this.connection.query("UPDATE employee SET role_id = ? where id = ?", [roleId,employeeId]);
+    };
 
-    deleteDepartment() {
-        return this.connection.query("DELETE FROM songs WHERE artist=?", ["weeknd"], function(err,res){
-            if(err) throw err;
-        })
-    }
+    
+};
 
-    deleteRole() {
-        return this.connection.query("DELETE FROM songs WHERE artist=?", ["weeknd"], function(err,res){
-            if(err) throw err;
-        })
-    }
-
-    deleteEmployee() {
-        return this.connection.query("DELETE FROM songs WHERE artist=?", ["weeknd"], function(err,res){
-            if(err) throw err;
-        })
-    }
-
-    updateEmployeeRole(){
-        return this. connection.query();
-    }
-
-    updateEmployeeManager(){
-        return this.connection.query();
-    }
-
-    viewEmployeesByManager(){
-        return this.connection.query();
-    }
-}
+module.exports = new DB(connection);
